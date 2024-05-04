@@ -14,7 +14,7 @@ export default async function NewPost({ searchParams }: NewPostProps) {
     params: { path: { id: searchParams.topic as any }}
   })
 
-  console.log("board", board)
+  const boardId = board.data!.data!.id
 
   if(board.error || !board.data) {
     return (
@@ -38,35 +38,41 @@ export default async function NewPost({ searchParams }: NewPostProps) {
     const data = {
       title: formData.get("title") as string,
       content: formData.get("content") as string,
-      topic: searchParams.topic
+      topic: formData.get("topic") as string,
     }
 
     const response = await useApi().POST(`/posts`, {
       body: { data }
     })
 
+    console.log("submit Post", response)
+
     redirect(`/${data.topic}/${response.data!.data!.id}`, RedirectType.replace)
   }
 
   return (
     <>
-      <h2 className="px-6 text-xl font-bold mt-8">새 게시물</h2>
-      <form className="grid grid-cols-3 gap-4 px-6" action={submit}>
-        <div className="col-span-2 bg-gray-200 rounded-xl py-4">
-          <hr/>
-          <div className="flex flex-col px-6">
+      <h2 className="text-xl font-bold mb-4">새 게시물</h2>
+      <form className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-8" action={submit}>
+        <div className="md:col-span-2">
+          <div className="flex flex-col">
             <input className="bg-transparent border-solid border border-gray-300 bg-gray-100 mb-2 rounded-lg h-10 px-4"
                    name="title" required/>
             <textarea className="bg-transparent border-solid border border-gray-300 bg-gray-100 h-64 mb-4 rounded-lg p-4"
                       name="content" required/>
+            <input
+              name="topic"
+              hidden
+              value={boardId}
+            />
           </div>
         </div>
         <div>
-          <div className="bg-gray-100 px-6 py-4">
+          <div className="">
             <p>
               게시판: { board.data?.data?.attributes?.title }
             </p>
-            <button className="w-full bg-blue-700" title="submit">저장</button>
+            <button className="w-full bg-blue-600 px-4 py-2 rounded-md text-white" title="submit">저장</button>
           </div>
         </div>
       </form>

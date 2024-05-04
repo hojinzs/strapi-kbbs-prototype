@@ -4,6 +4,7 @@ import {revalidatePath} from "next/cache";
 import PostComments from "./_components/Comments";
 import Link from "next/link";
 import Comment from "./_components/Comment";
+import {format} from "date-fns";
 
 export interface PostPageProps {
   params: { slug: number, id: number }
@@ -20,6 +21,9 @@ export default async function PostPage({ params }: PostPageProps) {
   const postResponse = await useApi().GET('/posts/{id}', {
     params: {
       path: { id: params.id },
+      query: {
+        populate: 'author'
+      }
     },
   })
 
@@ -35,14 +39,26 @@ export default async function PostPage({ params }: PostPageProps) {
     }
   })
 
-  console.log("commentsResponse", JSON.stringify(commentsResponse))
-
-
   return (
     <div>
-      <div className="pb-2">
-        <h2 className="text-xl font-bold mt-8">{postResponse.data?.data?.attributes?.title}</h2>
+      <div>
+        <Link
+          className="text-blue-500 hover:underline"
+          href={`/${params.slug}`}
+        >
+          {topicResponse.data?.data?.attributes?.title}
+        </Link>
       </div>
+      <h2 className="text-xl font-bold">{postResponse.data?.data?.attributes?.title}</h2>
+      <ul className="py flex flex-row justify-end gap-2 text-sm">
+        <li>
+          { postResponse.data?.data?.attributes?.author?.data?.attributes?.username }
+        </li>
+        <li className="text-gray-600 text-sm">
+          { postResponse.data?.data?.attributes?.createdAt && format(new Date(postResponse.data?.data?.attributes?.createdAt), 'M/d')}
+        </li>
+      </ul>
+      <hr className="my-4"/>
       <div className="my-4">
         <p>{postResponse.data?.data?.attributes?.content}</p>
       </div>
@@ -66,19 +82,26 @@ export default async function PostPage({ params }: PostPageProps) {
           </Link>
         </div>
       </div>
-      <h4>댓글</h4>
-      <ul>
-        {commentsResponse.data?.data?.map(comment => (
-          <li key={comment.id}>
-            <Comment
-              id={comment.id!}
-              slug={params.slug}
-              message={comment.attributes!.message!}
-              commenter={comment.attributes!.commenter!.data!}
-            />
-          </li>
-        ))}
-      </ul>
+      <h4 className="my-4 text-lg font-semibold">댓글</h4>
+      {commentsResponse.data?.data?.length === 0 ? (
+        <div className="text-center py-6 text-gray-400 text-sm">
+          <p>댓글이 없습니다.</p>
+        </div>
+      ): (
+        <ul>
+          {commentsResponse.data!.data!.map(comment => (
+            <li key={comment.id}>
+              <Comment
+                id={comment.id!}
+                slug={params.slug}
+                message={comment.attributes!.message!}
+                commenter={comment.attributes!.commenter!.data!}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+      <hr className="py-2"/>
       <PostComments
         topicSlug={params.slug}
         postId={params.id}

@@ -1,7 +1,7 @@
 import {useApi} from "../../../libs/api";
 import {notFound} from "next/navigation";
 import Link from "next/link";
-
+import {format} from "date-fns";
 
 export interface TopicPageProps {
   params: { slug: string }
@@ -9,42 +9,54 @@ export interface TopicPageProps {
 
 export default async function TopicPage({params}: TopicPageProps) {
 
-  const response = await useApi().GET('/topics/{id}', {
+  const topicResponse = await useApi().GET('/topics/{id}', {
     params: { path: { id: params.slug as any }}
   })
 
   const postsResponse = await useApi().GET('/posts', {
     params: {
       query: {
+        populate: 'author',
         filters: {
           // @ts-ignore
-          ['topic']: params.slug
+          topic: {
+            slug: params.slug
+          }
         }
       }
     }
   })
 
-  if(response.error) {
+  if(topicResponse.error) {
     notFound()
   }
 
   return (
     <>
       <div className="flex flex-row items-baseline">
-        <h2 className="text-xl font-bold mt-8">{response.data.data?.attributes?.title}</h2>
+        <h2 className="text-xl font-bold">{topicResponse.data.data?.attributes?.title}</h2>
         <div className="flex flex-grow justify-end">
           <Link className="bg-sky-700 rounded-xl px-4 py-2 text-white font-bold" href={`/post?topic=${params.slug}`}>
             새 게시물
           </Link>
         </div>
       </div>
-      <ul>
+      <hr className="mt-4"/>
+      <ul className="text-sm">
         {postsResponse.data?.data?.map(post => (
-          <li key={post.id}>
-            <Link href={`/${params.slug}/${post.id}`}>
-              {post.attributes!.title}
-            </Link>
-          </li>
+          <Link href={`/${params.slug}/${post.id}`} key={post.id}>
+            <li className="py-2 grid grid-cols-8 border-b border-solid border-b-gray-200 hover:bg-gray-200">
+              <span className="inline-block col-span-6">
+                {post.attributes!.title}
+              </span>
+              <span className="inline-block overflow-hidden">
+                {post.attributes!.author!.data!.attributes!.username}
+              </span>
+              <span className="inline-block text-center">
+                {format(new Date(post.attributes!.createdAt!), 'MM/dd')}
+              </span>
+            </li>
+          </Link>
         ))}
       </ul>
     </>

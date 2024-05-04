@@ -24,11 +24,11 @@ export default function Comment({ id, message, commenter, slug, wrapperClassName
 
   return (
     <div className={wrapperClassName}>
-      <span className="text-gray-600 block">{ commenter.attributes?.username }</span>
+      <span className="text-sm text-gray-500 block">{ commenter.attributes?.username }</span>
       <span>{ message }</span>
       { canDelete && (
         <form action={deleteComment}>
-          <button className="py-1 px-2 rounded bg-red-800 text-white" type="submit">
+          <button className="py-1 px-2 rounded bg-red-800 text-xs text-white" type="submit">
             삭제
           </button>
         </form>
