@@ -13,13 +13,9 @@ export type ErrorResponse<T extends object = object> = {
 }
 
 export const useApi = (token = getJwtToken()) => {
-
-  console.log("TOKEN :", token)
   return createClient<paths>({
     baseUrl: `${process.env.CMS_HOST}/api`,
-    headers: {
-      "Authorization": `Bearer ${token}`,
-    },
+    ...(token ? { headers: { "Authorization": `Bearer ${token}` } } : {}),
   })
 }
 
