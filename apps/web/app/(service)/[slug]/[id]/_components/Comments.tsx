@@ -17,8 +17,6 @@ export default function PostComments({ topicSlug, postId}: PostCommentsProps) {
       message: formData.get("message") as string,
       post: postId,
     }
-
-    console.log("data", data)
     await useApi().POST('/comments', {
       body: { data }
     })
@@ -34,11 +32,13 @@ export default function PostComments({ topicSlug, postId}: PostCommentsProps) {
   }
 
   return (
-    <div>
-      <h4>댓글 작성</h4>
-      <form action={submitComment}>
-        <textarea name="message"/>
-        <button type="submit">등록</button>
+    <div className="">
+      <h4 className="text-sm font-semibold">댓글 작성</h4>
+      <form className="flex flex-row gap-6 py-4" action={submitComment}>
+        <textarea className="flex-grow border-solid border-gray-200 border rounded p-2" name="message"/>
+        <div className="flex-shrink-0">
+          <button className="px-4 py-2 rounded border-gray-600 border-solid border" type="submit">등록</button>
+        </div>
       </form>
     </div>
   );

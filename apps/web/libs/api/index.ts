@@ -1,6 +1,7 @@
 import createClient from "openapi-fetch";
 import {paths} from "./strapi"
 import {getJwtToken} from "../auth";
+import qs from 'qs'
 
 export type ErrorResponse<T extends object = object> = {
   "data": T,
@@ -14,6 +15,7 @@ export type ErrorResponse<T extends object = object> = {
 
 export const useApi = (token = getJwtToken()) => {
   return createClient<paths>({
+    querySerializer: params => qs.stringify(params, { arrayFormat: 'brackets' }),
     baseUrl: `${process.env.CMS_HOST}/api`,
     ...(token ? { headers: { "Authorization": `Bearer ${token}` } } : {}),
   })
