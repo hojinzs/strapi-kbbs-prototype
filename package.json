@@ -3,9 +3,12 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "build:cms": "turbo build --filter=cms",
+    "build:web": "turbo build --filter=web",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "start:cms": "turbo run start --filter=cms"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
