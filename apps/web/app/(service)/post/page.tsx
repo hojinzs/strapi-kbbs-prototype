@@ -14,7 +14,7 @@ export default async function NewPost({ searchParams }: NewPostProps) {
     params: { path: { id: searchParams.topic as any }}
   })
 
-  console.log("board", board)
+  const boardId = board.data!.data!.id
 
   if(board.error || !board.data) {
     return (
@@ -38,7 +38,7 @@ export default async function NewPost({ searchParams }: NewPostProps) {
     const data = {
       title: formData.get("title") as string,
       content: formData.get("content") as string,
-      topic: searchParams.topic
+      topic: formData.get("topic") as string,
     }
 
     const response = await useApi().POST(`/posts`, {
@@ -60,6 +60,11 @@ export default async function NewPost({ searchParams }: NewPostProps) {
                    name="title" required/>
             <textarea className="bg-transparent border-solid border border-gray-300 bg-gray-100 h-64 mb-4 rounded-lg p-4"
                       name="content" required/>
+            <input
+              name="topic"
+              hidden
+              value={boardId}
+            />
           </div>
         </div>
         <div>
