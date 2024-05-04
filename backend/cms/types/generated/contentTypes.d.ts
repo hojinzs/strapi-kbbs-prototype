@@ -799,6 +799,7 @@ export interface ApiCommentComment extends Schema.CollectionType {
     singularName: 'comment';
     pluralName: 'comments';
     displayName: 'Comment';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -812,7 +813,7 @@ export interface ApiCommentComment extends Schema.CollectionType {
     >;
     post: Attribute.Relation<
       'api::comment.comment',
-      'manyToOne',
+      'oneToOne',
       'api::post.post'
     >;
     createdAt: Attribute.DateTime;
@@ -884,11 +885,7 @@ export interface ApiPostPost extends Schema.CollectionType {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
-    comments: Attribute.Relation<
-      'api::post.post',
-      'oneToMany',
-      'api::comment.comment'
-    >;
+    topic: Attribute.Relation<'api::post.post', 'oneToOne', 'api::topic.topic'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

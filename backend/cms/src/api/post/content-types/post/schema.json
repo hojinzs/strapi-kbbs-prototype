@@ -24,11 +24,10 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
     },
-    "comments": {
+    "topic": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::comment.comment",
-      "mappedBy": "post"
+      "relation": "oneToOne",
+      "target": "api::topic.topic"
     }
   }
 }
