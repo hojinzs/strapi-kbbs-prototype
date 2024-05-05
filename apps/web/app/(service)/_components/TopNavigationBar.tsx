@@ -33,7 +33,7 @@ export default async function TopNavigationBar() {
           {metadata?.logo && (
             <Image
               className="rounded-xl w-8 h-8 mr-4"
-              src={`${process.env.CMS_HOST}${metadata!.logo!.data!.attributes!.url}`}
+              src={`${metadata!.logo!.data!.attributes!.url}`}
               alt={metadata?.logo?.data?.attributes?.alternativeText || ""}
               width={metadata!.logo!.data!.attributes!.width}
               height={metadata!.logo!.data!.attributes!.height}

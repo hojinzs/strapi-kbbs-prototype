@@ -11,6 +11,10 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'strapi-kbbs-1-e0536926671a.herokuapp.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'strapi-kbb-prototype.s3.ap-northeast-2.amazonaws.com',
       }
     ]
   }
