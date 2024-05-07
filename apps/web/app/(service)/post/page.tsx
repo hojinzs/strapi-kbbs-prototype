@@ -1,6 +1,10 @@
 import {getServerSession} from "../../../libs/auth";
 import {useApi} from "../../../libs/api";
 import {redirect, RedirectType} from "next/navigation";
+import dynamic from "next/dynamic";
+const Editor = dynamic(() => import("../../../components/ui/Editor"), {
+  ssr: false
+});
 
 export interface NewPostProps {
   searchParams: { topic: number}
@@ -56,14 +60,17 @@ export default async function NewPost({ searchParams }: NewPostProps) {
       <form className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-8" action={submit}>
         <div className="md:col-span-2">
           <div className="flex flex-col">
-            <input className="bg-transparent border-solid border border-gray-300 bg-gray-100 mb-2 rounded-lg h-10 px-4"
-                   name="title" required/>
-            <textarea className="bg-transparent border-solid border border-gray-300 bg-gray-100 h-64 mb-4 rounded-lg p-4"
-                      name="content" required/>
+            <input
+              className="bg-transparent border-solid border border-gray-300 bg-gray-100 mb-2 rounded-lg h-10 px-4"
+              name="title"
+              required
+            />
+            <Editor name="content" required/>
             <input
               name="topic"
               hidden
-              value={boardId}
+              defaultValue={boardId}
+              readOnly
             />
           </div>
         </div>
