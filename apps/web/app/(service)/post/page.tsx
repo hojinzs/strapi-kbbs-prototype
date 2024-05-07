@@ -45,9 +45,9 @@ export default async function NewPost({ searchParams }: NewPostProps) {
       body: { data }
     })
 
-    console.log("submit Post", response)
+    const boardSlug = board.data?.data?.attributes?.slug
 
-    redirect(`/${data.topic}/${response.data!.data!.id}`, RedirectType.replace)
+    redirect(`/${boardSlug}/${response.data!.data!.id}`, RedirectType.replace)
   }
 
   return (
